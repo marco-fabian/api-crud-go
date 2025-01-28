@@ -19,7 +19,7 @@ func (r *Repository) Insert(post internal.Post) error {
 	defer cancel()
 
 	fmt.Println(r.Conn)
-
+	// Aplicando a QUERY SQL para inserir os dados a patir do objeto POST
 	_, err := r.Conn.Exec(
 		ctx,
 		"INSERT INTO posts (username, body) VALUES ($1, $2)",

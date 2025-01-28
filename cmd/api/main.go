@@ -9,11 +9,12 @@ import (
 func main() {
 	// Estabelecendo uma conexão com o banco de dados PostgreSQL
 	connectionString := "postgresql://posts:p0stgr3s@db:5432/posts"
+	//Puxando o pool de conexões 'conn'
 	conn, err := database.NewConnection(connectionString)
 	if err != nil {
 		panic(err)
 	}
-
+	//Setando para definir qual query SQL aplicar baseado no contexto
 	defer conn.Close()
 
 	repo := post.Repository{

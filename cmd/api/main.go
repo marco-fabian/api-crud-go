@@ -1,7 +1,10 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/marco-fabian/api-crud-go/internal"
 	"github.com/marco-fabian/api-crud-go/internal/database"
 	"github.com/marco-fabian/api-crud-go/internal/post"
 )
@@ -20,14 +23,29 @@ func main() {
 	repo := post.Repository{
 		Conn: conn,
 	}
-	repo = repo
+	//Para não dar error
+	service := post.Service{
+		Repository: repo,
+	}
 
-	// Definindo rota para o endpoint via GET
+	// Alterando a requisição JSON para um objeto POST
 	g := gin.Default()
-	g.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "Hello World",
-		})
+	g.POST("/posts", func(ctx *gin.Context) {
+		var post internal.Post
+		if err := ctx.BindJSON(&post); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		//Chamando o método CREATE para inserir um novo post
+		if err := service.Create(post); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
 	})
 	g.Run(":3000")
 }

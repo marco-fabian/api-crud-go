@@ -42,9 +42,9 @@ Este projeto é uma API básica em Go que permite realizar operações CRUD em p
     ```bash
     go mod tidy
 
-3. O docker-compose.yml já configura a variável de ambiente `DATABASE_URL` automaticamente para o serviço api.
+3. O `docker-compose.yml` já configura a variável de ambiente `DATABASE_URL` automaticamente para o serviço api.
 
-    - Basta rodar:
+- Basta rodar:
 
     ```bash
     docker-compose build
@@ -59,19 +59,33 @@ A API estará disponível em http://localhost:3000.
 - **PATCH** /posts: Atualiza um post existente.
 - **DELETE** /posts: Exclui um post pelo seu ID.
 
+## Portas Utilizadas
+
+- **API**: A API estará disponível em `http://localhost:3000`.
+- **Banco de Dados (PostgreSQL)**: O banco de dados estará acessível em `localhost:5432`.
+- **Interface do Banco de Dados (Pgweb)**: A interface gráfica para o banco de dados estará disponível em `http://localhost:3001`.
+
+### Detalhes das Portas:
+
+| Serviço  | Porta no Host | Porta no Container | Descrição                                   |
+|----------|---------------|--------------------|--------------------------------------------|
+| `api`    | 3000          | 3000               | API principal do projeto.                  |
+| `db`     | 5432          | 5432               | Banco de dados PostgreSQL.                 |
+| `db_ui`  | 3001          | 8081               | Interface gráfica (Pgweb) para o PostgreSQL. |
+
 ## Estrutura do Projeto
 
-.
-├── main.go
-├── go.mod
-├── go.sum
-└── internal
-    ├── database
-    │   └── connection.go
-    ├── post
-    │   ├── repository.go
-    │   └── service.go
-    └── internal.go
+* .
+    * ├── main.go
+    * ├── go.mod
+    * ├── go.sum
+    * └── internal
+        * ├── database
+            * └── connection.go
+        * └── post
+            * ├── repository.go
+            * └── service.go
+        * └── internal.go
 
  ## Contribuição
 

@@ -17,9 +17,11 @@ type Repository struct {
 func (r *Repository) Insert(post internal.Post) error {
 	_, err := r.Conn.Exec(
 		context.Background(),
-		"INSERT INTO posts (username, body) VALUES ($1, $2)",
+		"INSERT INTO posts (username, body, title, author) VALUES ($1, $2, $3, $4)",
 		post.Username,
 		post.Body,
+		post.Title,
+		post.Author,
 	)
 
 	return err
@@ -40,7 +42,7 @@ func (r *Repository) Delete(id uuid.UUID) error {
 }
 
 func (r *Repository) List() ([]internal.Post, error) {
-	rows, err := r.Conn.Query(context.Background(), "SELECT id, username, body, created_at FROM posts")
+	rows, err := r.Conn.Query(context.Background(), "SELECT id, username, body, title, author, created_at FROM posts")
 	if err != nil {
 		return nil, fmt.Errorf("Erro ao listar posts: %w", err)
 	}
@@ -49,7 +51,7 @@ func (r *Repository) List() ([]internal.Post, error) {
 	var posts []internal.Post
 	for rows.Next() {
 		var post internal.Post
-		err := rows.Scan(&post.ID, &post.Username, &post.Body, &post.CreatedAt)
+		err := rows.Scan(&post.ID, &post.Username, &post.Body, &post.Title, &post.Author, &post.CreatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("Erro ao ler post: %w", err)
 		}
@@ -77,6 +79,18 @@ func (r *Repository) Update(id uuid.UUID, post internal.Post) error {
 	if post.Body != "" {
 		query += fmt.Sprintf("body = $%d, ", counter)
 		args = append(args, post.Body)
+		counter++
+	}
+
+	if post.Title != "" {
+		query += fmt.Sprintf("title = $%d, ", counter)
+		args = append(args, post.Title)
+		counter++
+	}
+
+	if post.Author != "" {
+		query += fmt.Sprintf("author = $%d, ", counter)
+		args = append(args, post.Author)
 		counter++
 	}
 

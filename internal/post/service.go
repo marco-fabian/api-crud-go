@@ -26,6 +26,10 @@ func (s Service) Create(post internal.Post) error {
 		return ErrPostBodyExceedsLimit
 	}
 
+	if post.Title == "" || post.Author == "" {
+		return errors.New("Os campos title e author são obrigatórios")
+	}
+
 	return s.Repository.Insert(post)
 }
 

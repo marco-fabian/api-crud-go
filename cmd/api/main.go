@@ -7,12 +7,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/joho/godotenv"
 	"github.com/marco-fabian/api-crud-go/internal"
 	"github.com/marco-fabian/api-crud-go/internal/database"
 	"github.com/marco-fabian/api-crud-go/internal/post"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	connectionString := os.Getenv("DATABASE_URL")
 	if connectionString == "" {
 		log.Fatal("DATABASE_URL environment variable not set")
